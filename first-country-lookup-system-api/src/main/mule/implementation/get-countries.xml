@@ -48,7 +48,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			
 </ee:message>
 		</ee:transform>
-		<choice doc:name="Choice1" doc:id="168d5e5a-72fd-405d-a806-b603a9a30679" >
+		<choice doc:name="Choice" doc:id="168d5e5a-72fd-405d-a806-b603a9a30679" >
 			<when expression="#[(isEmpty(payload) == true) or (payload == null)]" >
 				<raise-error doc:name="Raise Custom Error" doc:id="6bcd2635-b518-4eee-a943-6735985ece8d" type="FIRSTORG:COUNTRY_NOT_FOUND" description="No country found for the given Country ISO Code" />
 			</when>
