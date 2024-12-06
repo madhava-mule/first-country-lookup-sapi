@@ -54,6 +54,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			</when>
 		</choice>
 		<logger level="INFO" doc:name="Log Response After Mapping" doc:id="28e871ff-e054-41be-a181-a8fd417ca3c9" message="Get Country Response After Filtering: #[payload]" />
+		<logger level="INFO" doc:name="Flow End Logger" doc:id="2a3d12ca-ae48-48f9-9a9e-3abeb7a07f52" message="#[log(vars.correlationId)]Get Country Flow End"/>
 		<error-handler ref="errorError_Handler" />
 	</flow>
 </mule>
