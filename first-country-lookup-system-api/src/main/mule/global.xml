@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	
+	<http:listener-config name="first-country-lookup-sapi-httpListenerConfig">
+        <http:listener-connection host="${http.host}" port="${http.port}" />
+    </http:listener-config>
+    <apikit:config name="first-country-lookup-sapi-config" api="resource::c321daba-8623-40d7-a2fc-0775a3b02f84:first-country-lookup-sapi:1.0.0:raml:zip:first-country-lookup-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="fc229d77-11d2-4b49-91e2-cb0626bcd988" basePath="${firstOrg.basePath}">
+		<http:request-connection host="${firstOrg.host}"/>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="56ae41f9-8669-4c86-a6c8-60cbad0fcaae" file="config\api-${env}-config.yaml" />
+	<api-gateway:autodiscovery apiId="${mule.appId}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="e79ec73e-eb3f-4130-a32c-c6fb748515b1" flowRef="first-country-lookup-sapi-main" />
+    
+	
+	
+	
+</mule>

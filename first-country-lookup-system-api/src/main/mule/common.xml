@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="commonSub_Flow" doc:id="700e4707-ad71-41d7-b349-611c7c5718e0" >
+		<choice doc:name="Choice" doc:id="0f468d6f-4685-41df-80e8-aa6c27e86e2d" >
+			<when expression="#[(vars.errorObject != null) or (!isEmpty(vars.errorObject.description))]">
+				<raise-error doc:name="Raise Custom Error" doc:id="38235278-a060-4e00-b41f-17b7038e24cb" type="SFDC:CUSTOM_ERROR" description='#[error.description default "no additional details"]'/>
+			</when>
+		</choice>
+	</sub-flow>
+</mule>

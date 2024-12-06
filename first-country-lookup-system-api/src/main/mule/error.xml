@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="errorError_Handler" doc:id="7578a988-cc98-42d4-bef4-8f03bf1f4a02" >
+	
+	 <on-error-propagate enableNotifications="false" logException="false" doc:name="On Error Propagate"
+            doc:id="3dcd6e32-1d73-4051-8ea3-6b0a7f5fc401" type="FIRSTORG:COUNTRY_NOT_FOUND">
+            <set-variable value="#[404 as Number]" doc:name="Set HTTP Status" doc:id="de455d5c-b39f-4c3a-b3be-e14af5236a24"
+                variableName="httpStatus"/>
+            <ee:transform doc:name="Set Error Message" doc:id="68c5293b-354c-4aa7-ad4b-f213a35fdbc7">
+                <ee:message>
+					<ee:set-payload resource="dataweave/set-country-not-found-error.dwl" />
+                
+</ee:message>
+            </ee:transform>
+            <logger level="ERROR" doc:name="Log Error Message" doc:id="31f900af-69d2-46c8-a560-a48144526551"
+                message="log(vars.correlationId, flow)] Error Message: #[payload]"
+                category="com.effinium.first-country-lookup-sapi"/>
+        </on-error-propagate>
+        <on-error-propagate enableNotifications="false" logException="false" doc:name="On Error Propagate"
+            doc:id="3d7ab8b6-c0b6-4800-bde3-a3d35ef1fd2e" type="ANY">
+            <set-variable value="#[error.errorMessage.attributes.statusCode default 500]" doc:name="Set HTTP Status"
+                doc:id="f24823fb-8b18-439e-80d0-4f67d5a89f96" variableName="httpStatus"/>
+            <ee:transform doc:name="Set Error Message" doc:id="6d453b23-57b8-48a1-bc4f-d4b4552aa0de">
+                <ee:message>
+					<ee:set-payload resource="dataweave/set-common-error.dwl" />
+                
+</ee:message>
+            </ee:transform>
+            <logger level="ERROR" doc:name="Log Error Message" doc:id="3f099a0e-668c-4053-a3be-ac9530227f05"
+                message="#log(vars.correlationId, flow)] Error Message: #[payload]"
+                category="com.effinium.first-country-lookup-sapi"/>
+        </on-error-propagate>
+	
+	</error-handler>
+</mule>
