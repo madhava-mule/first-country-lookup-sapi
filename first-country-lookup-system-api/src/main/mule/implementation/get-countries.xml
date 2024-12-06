@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="get-countriesFlow" doc:id="c8a81418-f48f-41b3-9d70-7308b343f558" >
+		<logger level="INFO" doc:name="Flow Start Logger" doc:id="50206c8c-c647-4829-b659-b0715c3d69f9" message='Get Country Flow Start for ISO Code #[attributes.uriParams.iso_code default ""]' />
+		<ee:transform doc:name="Set Request Attributes" doc:id="35830dc9-78e7-4e47-9557-4ff78ff3c954" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="isoCode" ><![CDATA[attributes.uriParams.iso_code default ""
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<until-successful maxRetries="${untilSuccessful.maxRetries}" doc:name="Retry Connectivity" doc:id="662a9832-2fb3-47cb-823c-8946f88ea190" millisBetweenRetries="${untilSuccessful.frequency}">
+			<try doc:name="Try Block" doc:id="ea972477-8ab3-491c-b98c-3d1c6e1d7730">
+			<http:request method="${firstOrg.method}" doc:name="First Org" doc:id="031f8350-0ac2-4b2c-99bf-25cfd229898d" path="${firstOrg.path}" config-ref="HTTP_Request_configuration">
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"iso_code" : vars.isoCode
+}]]]></http:uri-params>
+		</http:request>
+			<error-handler>
+				<on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="bca88af4-ea80-4caf-be2c-5a38f4e06485" when="#[error.errorType.identifier != 'CONNECTIVITY']">
+					<ee:transform doc:name="Set Error Varaiable" doc:id="5539b4b1-6b01-45de-90b8-ff66a61283ff">
+						<ee:message>
+						</ee:message>
+						<ee:variables>
+							<ee:set-variable variableName="errorObject"><![CDATA[error]]></ee:set-variable>
+								<ee:set-variable variableName="errorPayload" ><![CDATA[error.errorMessage.payload ]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		</until-successful>
+		
+		<flow-ref doc:name="error-checkpoint-subflow" doc:id="6df28249-58b7-4da5-bb79-ec1f3985ac9d" name="commonSub_Flow"/>
+		<ee:transform doc:name="Filter First Country Response" doc:id="3b8b9910-84a0-4745-be98-9944ce40dcd0">
+			<ee:message>
+				<ee:set-payload resource="dataweave/map-filter first country response.dwl" />
+			
+</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="168d5e5a-72fd-405d-a806-b603a9a30679" >
+			<when expression="#[(isEmpty(payload) == true) or (payload == null)]" >
+				<raise-error doc:name="Raise Custom Error" doc:id="6bcd2635-b518-4eee-a943-6735985ece8d" type="FIRSTORG:COUNTRY_NOT_FOUND" description="No country found for the given Country ISO Code" />
+			</when>
+		</choice>
+		<logger level="INFO" doc:name="Log Response After Mapping" doc:id="28e871ff-e054-41be-a181-a8fd417ca3c9" message="Get Country Response After Filtering: #[payload]" />
+		<logger level="INFO" doc:name="Flow End Logger" doc:id="2a3d12ca-ae48-48f9-9a9e-3abeb7a07f52" message="#[log(vars.correlationId)]Get Country Flow End"/>
+		<error-handler ref="errorError_Handler" />
+	</flow>
+</mule>

@@ -1,0 +1,24 @@
+
+ # list all the global configurations of this api in this file #
+
+http:
+  host: "0.0.0.0"
+  port: "8091"
+  basePath: "/api/*"
+
+
+firstOrg:
+  basePath: "/data/v1"
+  method: "GET"
+  path: "/countries"
+  host: "api.first.org"
+  port: "443"
+
+
+untilSuccessful:
+  maxRetries: "2"
+  frequency: "30000"
+ 
+mule:
+  appId: "20101975"
+
