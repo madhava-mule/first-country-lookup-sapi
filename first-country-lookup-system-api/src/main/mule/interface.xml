@@ -12,7 +12,7 @@
         </http:listener>
         <set-variable value="#[attributes.headers.correlationId default correlationId]" doc:name="Set Variable" doc:id="78442c33-0f76-4089-8259-bdfcefa50f27" variableName="correlationId"/>
 		<apikit:router config-ref="first-country-lookup-sapi-config" doc:name="Global APIkit Router"/>
-        <error-handler ref="errorError_Handler">
+        <error-handler ref="errorErrorHandler">
            
         </error-handler>
     </flow>
@@ -36,7 +36,7 @@ output application/json
 ] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
             </ee:message>
         </ee:transform>
-		<error-handler ref="errorError_Handler" />
+		<error-handler ref="errorErrorHandler" />
     </flow>
     <flow name="get:\countries\(iso_code):first-country-lookup-sapi-config">
 		<flow-ref doc:name="get-country-flow" doc:id="68cc9057-3465-43f3-a91d-38d8fba9430a" name="get-countriesFlow"/>

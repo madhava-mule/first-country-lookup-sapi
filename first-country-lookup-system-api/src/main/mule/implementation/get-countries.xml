@@ -27,17 +27,18 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 }]]]></http:uri-params>
 		</http:request>
 			<error-handler>
-				<on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="bca88af4-ea80-4caf-be2c-5a38f4e06485" when="#[error.errorType.identifier != 'CONNECTIVITY']">
-					<ee:transform doc:name="Set Error Varaiable" doc:id="5539b4b1-6b01-45de-90b8-ff66a61283ff">
+					<on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="fe646359-3ebb-4510-ab8e-1725569d38c6" when="#[error.errorType.identifier != 'CONNECTIVITY']">
+						<ee:transform doc:name="Set Error Varaiable" doc:id="5539b4b1-6b01-45de-90b8-ff66a61283ff">
 						<ee:message>
 						</ee:message>
 						<ee:variables>
 							<ee:set-variable variableName="errorObject"><![CDATA[error]]></ee:set-variable>
-								<ee:set-variable variableName="errorPayload" ><![CDATA[error.errorMessage.payload ]]></ee:set-variable>
+								<ee:set-variable variableName="errorPayload"><![CDATA[error.errorMessage.payload ]]></ee:set-variable>
 						</ee:variables>
 					</ee:transform>
-				</on-error-continue>
-			</error-handler>
+					</on-error-continue>
+			
+</error-handler>
 		</try>
 		</until-successful>
 		
@@ -55,6 +56,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</choice>
 		<logger level="INFO" doc:name="Log Response After Mapping" doc:id="28e871ff-e054-41be-a181-a8fd417ca3c9" message="Get Country Response After Filtering: #[payload]" />
 		<logger level="INFO" doc:name="Flow End Logger" doc:id="2a3d12ca-ae48-48f9-9a9e-3abeb7a07f52" message="#[log(vars.correlationId)]Get Country Flow End"/>
-		<error-handler ref="errorError_Handler" />
+		<error-handler ref="errorErrorHandler" />
 	</flow>
 </mule>
